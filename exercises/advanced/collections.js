@@ -8,9 +8,22 @@
  *    4. Writes the new file to the file located at `writePath`
  */
 
+var fs = require('fs');
+var Promise = require('bluebird');
+var promiseConstructor = require('../../exercises/bare_minimum/promiseConstructor.js');
+var pluckFirstLineFromFileAsync = promiseConstructor.pluckFirstLineFromFileAsync;
+var writeFileAsync = Promise.promisify(fs.writeFile)
 
 var combineFirstLineOfManyFiles = function(filePaths, writePath) {
  // TODO
+ var promiseArray = []
+ //loop through array of paths
+ // save promises to array
+ filePaths.forEach(path => promiseArray.push(pluckFirstLineFromFileAsync(path)))
+ //call promise.all on array
+ return Promise.all(promiseArray)
+  //write new file to writePath (.join(\n))
+  .then(firstLine => writeFileAsync(writePath, firstLine.join('\n')))
 };
 
 // Export these functions so we can unit test them
